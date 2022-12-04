@@ -1,31 +1,30 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue';
+import Block from './components/Block.vue';
+import Result from './components/Result.vue';
+
+let isPlaing = ref(false);
+let showResult = ref(false)
+let delay = ref<number>();
+let score = ref<number>();
+let start = () => {
+  delay.value = 500 + Math.random() * 5000;
+  isPlaing.value = true;
+  showResult.value = false
+
+}
+let gameEnd = (rectionTime: number) => {
+  score.value = rectionTime / 1000;
+  isPlaing.value = false;
+  showResult.value = true;
+}
+
 </script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-</template>
-
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+  <h1 class="text-2xl text-center font-bold ">Reaction timer</h1>
+  <p class="text-center">let's check How much time you need to react</p>
+  <button @click="start" :disabled="isPlaing" 
+    class="border rounded flex justify-center w-20 pb-1 bg-indigo-500 hover:bg-indigo-600  mx-auto">play</button>
+  <component v-if="isPlaing" :is="Block" :delay="delay" @end="gameEnd"></component>
+  <component v-if="showResult" :is='Result' :score="score"></component>
+  </template>
